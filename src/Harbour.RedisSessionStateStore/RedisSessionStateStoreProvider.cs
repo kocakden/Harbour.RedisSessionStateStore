@@ -102,7 +102,7 @@ namespace Harbour.RedisSessionStateStore
         {
             clientManagerStatic = null;
         }
-        
+
         public override void Initialize(string name, NameValueCollection config)
         {
             if (String.IsNullOrWhiteSpace(name))
@@ -121,8 +121,9 @@ namespace Harbour.RedisSessionStateStore
                 {
                     var host = config["host"];
                     var clientType = config["clientType"];
+                    var initialDb = config["initialDb"];
 
-                    this.clientManager = this.CreateClientManager(clientType, host);
+                    this.clientManager = this.CreateClientManager(clientType, host, initialDb);
                     this.manageClientManagerLifetime = false;
                 }
                 else
@@ -135,7 +136,7 @@ namespace Harbour.RedisSessionStateStore
             base.Initialize(name, config);
         }
 
-        private IRedisClientsManager CreateClientManager(string clientType, string host)
+        private IRedisClientsManager CreateClientManager(string clientType, string host, string initialDbStr)
         {
             if (String.IsNullOrWhiteSpace(host))
             {
@@ -147,13 +148,19 @@ namespace Harbour.RedisSessionStateStore
                 clientType = "POOLED";
             }
 
+            var initialDb = 0;
+            if (!string.IsNullOrEmpty(initialDbStr))
+            {
+                int.TryParse(initialDbStr, out initialDb);
+            }
+
             if (clientType.ToUpper() == "POOLED")
             {
-                return new PooledRedisClientManager(host);
+                return new PooledRedisClientManager(initialDb, new[] { host });
             }
             else
             {
-                return new BasicRedisClientManager(host);
+                return new BasicRedisClientManager(initialDb, new[] { host });
             }
         }
 
@@ -186,12 +193,12 @@ namespace Harbour.RedisSessionStateStore
 
         public override void InitializeRequest(HttpContext context)
         {
-            
+
         }
 
         public override void EndRequest(HttpContext context)
         {
-            
+
         }
 
         private IRedisClient GetClientAndWatch(string key)

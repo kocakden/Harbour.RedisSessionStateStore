@@ -44,7 +44,7 @@
       <HintPath>..\..\lib\ServiceStack.Redis.3.8.3\lib\net35\ServiceStack.Redis.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text">
-      <HintPath>..\..\lib\ServiceStack.Text.3.8.3\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\lib\ServiceStack.Text.3.9.70\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
